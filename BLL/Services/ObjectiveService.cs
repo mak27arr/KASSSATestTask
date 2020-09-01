@@ -43,9 +43,24 @@ namespace KASSSATestTask.BLL.Services
             var mapper = new MapperConfiguration(cfg => cfg.CreateMap<Objective, ObjectiveDTO>()).CreateMapper();
             return mapper.Map<IEnumerable<Objective>, List<ObjectiveDTO>>(Database.Objective.GetAll());
         }
-        public void UpdateObjective(ObjectiveDTO orderDto)
+        public void UpdateObjective(ObjectiveDTO objectiveDto)
         {
-            Database.Dispose();
+            if (objectiveDto == null)
+                throw new ValidationException("Empty data", "");
+            var objOld = Database.Objective.Get(objectiveDto.id);
+            if (objOld == null)
+                throw new ValidationException("Item not faund, cant update", "");
+            Objective objective = new Objective
+            {
+                id = objectiveDto.id,
+                Created = objectiveDto.Created,
+                Deadline = objectiveDto.Deadline,
+                Description = objectiveDto.Description,
+                Name = objectiveDto.Name,
+                Status = objectiveDto.Status
+            };
+            Database.Objective.Update(objective);
+            Database.Save();
         }
     }
 }
