@@ -14,7 +14,7 @@ namespace KASSSATestTask.BLL.BuisnesModule
             }
             if(!objective.Created.HasValue || !objective.Deadline.HasValue)
             {
-                throw new ValidationException("Empty objective data cant determine status", "");
+                throw new ValidationException("Empty objective data cant determine status in objective:" + objective.Id, "");
             }
             if (objective.Status != ObjectiveStatus.Finish)
             {

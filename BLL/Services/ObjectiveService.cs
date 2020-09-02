@@ -30,7 +30,7 @@ namespace KASSSATestTask.BLL.Services
                 throw new ValidationException("Empty id", "");
             var objective = Database.Objective.Get(id.Value);
             if (objective == null)
-                throw new ValidationException("Not faund", "");
+                throw new ValidationException("Not found", "");
             StatusUpdate statusUpdate = new StatusUpdate();
             if(statusUpdate.UpdateStatus(objective))
             {
@@ -61,7 +61,7 @@ namespace KASSSATestTask.BLL.Services
                 throw new ValidationException("Empty data", "");
             var objOld = Database.Objective.Get(objectiveDto.id);
             if (objOld == null)
-                throw new ValidationException("Item not faund, cant update", "");
+                throw new ValidationException("Item not found, cant update", "");
             var mapper = new MapperConfiguration(cfg => cfg.CreateMap<ObjectiveDTO,Objective>().ForMember(d => d.Created, (options) => options.Ignore())).CreateMapper();
             Objective objective = mapper.Map<ObjectiveDTO,Objective>(objectiveDto);
             Database.Objective.Update(objective);
@@ -73,7 +73,7 @@ namespace KASSSATestTask.BLL.Services
                 throw new ValidationException("Empty id", "");
             var objective = Database.Objective.Get(id.Value);
             if (objective == null)
-                throw new ValidationException("Not faund", "");
+                throw new ValidationException("Not found", "");
             Database.Objective.Delete(id.Value);
             Database.Save();
         }
