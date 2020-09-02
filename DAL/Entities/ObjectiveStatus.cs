@@ -1,5 +1,4 @@
-﻿
-namespace KASSSATestTask.Models.Entities
+﻿namespace KASSSATestTask.Models.Entities
 {
         public enum ObjectiveStatus : short
         {

@@ -10,6 +10,7 @@ namespace KASSSATestTask.Models.EF
         public ObjectiveContext(DbContextOptions<ObjectiveContext> options)
             : base(options)
         {
+            
         }
     }
 }

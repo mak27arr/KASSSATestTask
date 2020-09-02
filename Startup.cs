@@ -1,15 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using KASSSATestTask.BLL.Infrastructure;
+using KASSSATestTask.PL.Util;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Ninject;
+using Ninject.Modules;
+using System;
 
 namespace KASSSATestTask
 {
@@ -23,9 +21,14 @@ namespace KASSSATestTask
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            string defConString = Configuration.GetConnectionString("DefaultConnection");
+            NinjectModule objectiveModule = new ObjectiveModule();
+            NinjectModule serviceModule = new ServiceModule(defConString);
+            IKernel kernel = new StandardKernel(objectiveModule, serviceModule);
+            return kernel.Get<IServiceProvider>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -35,13 +38,10 @@ namespace KASSSATestTask
             {
                 app.UseDeveloperExceptionPage();
             }
-
             app.UseHttpsRedirection();
-
             app.UseRouting();
-
-            app.UseAuthorization();
-
+            //app.UseAuthorization();
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

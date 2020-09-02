@@ -3,12 +3,13 @@ using System.Collections.Generic;
 
 namespace KASSSATestTask.BLL.Interface
 {
-    interface IObjectiveService
+    public interface IObjectiveService
     {
-        void AddObjective(ObjectiveDTO orderDto);
-        void UpdateObjective(ObjectiveDTO orderDto);
         ObjectiveDTO GetObjective(int? id);
         IEnumerable<ObjectiveDTO> GetObjectives();
+        void AddObjective(ObjectiveDTO orderDto);
+        void UpdateObjective(ObjectiveDTO orderDto);
+        void DeleteObjective(int? id);
         void Dispose();
     }
 }
