@@ -1,21 +1,22 @@
-﻿using KASSSATestTask.DAL.Interface;
+﻿using Autofac;
+using KASSSATestTask.DAL.Interface;
 using KASSSATestTask.DAL.Repositories;
+using KASSSATestTask.Models.EF;
 using Microsoft.EntityFrameworkCore;
-using Ninject.Modules;
 
 namespace KASSSATestTask.BLL.Infrastructure
 {
-    public class ServiceModule:NinjectModule
+    public class ServiceModule: Module
     {
         private string connectionString;
         public ServiceModule(string connection)
         {
             connectionString = connection;
         }
-        public override void Load()
+        protected override void Load(ContainerBuilder builder)
         {
-            var set = SqlServerDbContextOptionsExtensions.UseSqlServer(new DbContextOptionsBuilder(), connectionString).Options;
-            Bind<IUnitOfWork>().To<EFUnitOfWork>().WithConstructorArgument(set);
+            var set = new DbContextOptionsBuilder<ObjectiveContext>().UseNpgsql(connectionString).Options;
+            builder.RegisterType<EFUnitOfWork>().As<IUnitOfWork>().WithParameter("options", set);
         }
     }
 }

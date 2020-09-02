@@ -18,7 +18,7 @@ namespace KASSSATestTask.BLL.Services
         }
         public void AddObjective(ObjectiveDTO objectiveDto)
         {
-            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<ObjectiveDTO,Objective>().ForMember(d => d.id, (options) => options.Ignore())).CreateMapper();
+            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<ObjectiveDTO,Objective>().ForMember(d => d.Id, (options) => options.Ignore())).CreateMapper();
             Objective objective = mapper.Map<ObjectiveDTO,Objective>(objectiveDto);
             objective.Created = DateTime.Now;
             Database.Objective.Create(objective);

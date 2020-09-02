@@ -1,4 +1,6 @@
+using Autofac;
 using KASSSATestTask.BLL.Infrastructure;
+using KASSSATestTask.Models.EF;
 using KASSSATestTask.PL.Util;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -6,9 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using Ninject;
-using Ninject.Modules;
-using System;
+using Newtonsoft.Json.Converters;
 
 namespace KASSSATestTask
 {
@@ -20,22 +20,25 @@ namespace KASSSATestTask
         }
 
         public IConfiguration Configuration { get; }
-
+        public ILifetimeScope AutofacContainer { get; private set; }
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
-            //string defConString = Configuration.GetConnectionString("DefaultConnection");
-            //NinjectModule objectiveModule = new ObjectiveModule();
-            //NinjectModule serviceModule = new ServiceModule(defConString);
-            //IKernel kernel = new StandardKernel(objectiveModule, serviceModule);
-            //return kernel.Get<IServiceProvider>();
+            services.AddControllers().AddNewtonsoftJson(options =>
+            options.SerializerSettings.Converters.Add(new StringEnumConverter()));
+            services.AddSwaggerGenNewtonsoftSupport();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Objective API", Version = "v1" });
             });
-        }
 
+        }
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+            string defConString = Configuration.GetConnectionString("DefaultConnection");
+            builder.RegisterModule(new ObjectiveModule(defConString)); 
+            //builder.RegisterModule(new ServiceModule(defConString));
+        }
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {

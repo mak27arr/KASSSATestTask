@@ -16,7 +16,7 @@ namespace KASSSATestTask.Models.Repositories
         }
         public void Create(Objective item)
         {
-            db.Objective.Add(item);
+            db.Objectives.Add(item);
         }
         public void Update(Objective item)
         {
@@ -24,21 +24,21 @@ namespace KASSSATestTask.Models.Repositories
         }
         public void Delete(int id)
         {
-            Objective objective = db.Objective.Find(id);
+            Objective objective = db.Objectives.Find(id);
             if (objective != null)
-                db.Objective.Remove(objective);
+                db.Objectives.Remove(objective);
         }
         public Objective Get(int id)
         {
-            return db.Objective.Find(id);
+            return db.Objectives.Find(id);
         }
         public IEnumerable<Objective> GetAll()
         {
-            return db.Objective.ToList();
+            return db.Objectives.ToList();
         }
         public IEnumerable<Objective> Find(System.Func<Objective, bool> predicate)
         {
-            return db.Objective.Where(predicate).ToList();
+            return db.Objectives.Where(predicate).ToList();
         }
 
     }
