@@ -2,8 +2,10 @@
 using KASSSATestTask.Models.Entities;
 using KASSSATestTask.Models.Interface;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace KASSSATestTask.Models.Repositories
 {
@@ -14,31 +16,48 @@ namespace KASSSATestTask.Models.Repositories
         {
             this.db = context;
         }
-        public void Create(Objective item)
+        public async Task<bool> CreateAsync(Objective item)
         {
-            db.Objectives.Add(item);
+            await db.Objectives.AddAsync(item);
+            return true;
         }
-        public void Update(Objective item)
+        public async Task<bool> UpdateAsync(Objective item)
         {
-            db.Entry(item).State = EntityState.Modified;
+            Objective objective = await db.Objectives.FindAsync(item);
+            if (objective != null) { 
+                db.Entry(item).State = EntityState.Modified;
+                db.Entry(item).Property(x => x.Created).IsModified = false;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
-        public void Delete(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            Objective objective = db.Objectives.Find(id);
+            Objective objective = await db.Objectives.FindAsync(id);
             if (objective != null)
+            {
                 db.Objectives.Remove(objective);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
-        public Objective Get(int id)
+        public async Task<Objective> GetAsync(int id)
         {
-            return db.Objectives.Find(id);
+            return await db.Objectives.AsNoTracking().FirstOrDefaultAsync(x=>x.Id==id);
         }
-        public IEnumerable<Objective> GetAll()
+        public async Task<IEnumerable<Objective>> GetAllAsync()
         {
-            return db.Objectives.ToList();
+            return await db.Objectives.AsNoTracking().ToListAsync();
         }
-        public IEnumerable<Objective> Find(System.Func<Objective, bool> predicate)
+        public async Task<IEnumerable<Objective>> FindAsync(Func<Objective, bool> predicate)
         {
-            return db.Objectives.Where(predicate).ToList();
+            return await db.Objectives.AsNoTracking().Where(predicate).AsQueryable().ToListAsync();
         }
 
     }

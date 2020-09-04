@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoMapper;
 using KASSSATestTask.BLL.Interface;
 using KASSSATestTask.Models.Entities;
@@ -11,53 +12,47 @@ namespace KASSSATestTask.PL.Controllers
     public class ObjectiveController : ControllerBase
     {
         IObjectiveService objectiveService;
+        IMapper mapper;
         public ObjectiveController(IObjectiveService serv)
         {
             objectiveService = serv;
+            mapper = new MapperConfiguration(cfg => cfg.CreateMap<ObjectiveDTO, ObjectiveViewModel>()).CreateMapper();
         }
         // GET: api/Objective
         [HttpGet]
-        public IEnumerable<ObjectiveViewModel> Get()
+        public async Task<IEnumerable<ObjectiveViewModel>> GetAsync()
         {
-            IEnumerable<ObjectiveDTO> objectiveDtos = objectiveService.GetObjectives();
-            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<ObjectiveDTO, ObjectiveViewModel>()).CreateMapper();
+            IEnumerable<ObjectiveDTO> objectiveDtos = await objectiveService.GetObjectivesAsync();
             var objectives = mapper.Map<IEnumerable<ObjectiveDTO>, List<ObjectiveViewModel>>(objectiveDtos);
             return objectives;
         }
-
         // GET: api/Objective/5
         [HttpGet("{id}", Name = "Get")]
-        public ObjectiveViewModel Get(int id)
+        public async Task<ObjectiveViewModel> GetAsync(int id)
         {
-            ObjectiveDTO objectiveDto = objectiveService.GetObjective(id);
-            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<ObjectiveDTO, ObjectiveViewModel>()).CreateMapper();
+            ObjectiveDTO objectiveDto = await objectiveService.GetObjectiveAsync(id);
             var objective = mapper.Map<ObjectiveDTO, ObjectiveViewModel>(objectiveDto);
             return objective;
         }
-
         // POST: api/Objective
         [HttpPost]
-        public void Post([FromBody] ObjectiveViewModel value)
+        public async void PostAsync([FromBody] ObjectiveViewModel value)
         {
-            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<ObjectiveViewModel, ObjectiveDTO>()).CreateMapper();
             var objective = mapper.Map<ObjectiveViewModel,ObjectiveDTO>(value);
-            objectiveService.AddObjective(objective);
+            await objectiveService.AddObjectiveAsync(objective);
         }
-
         // PUT: api/Objective/5
         [HttpPut]
-        public void Put([FromBody] ObjectiveViewModel value)
+        public async void PutAsync([FromBody] ObjectiveViewModel value)
         {
-            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<ObjectiveViewModel, ObjectiveDTO>()).CreateMapper();
             var objective = mapper.Map<ObjectiveViewModel, ObjectiveDTO>(value);
-            objectiveService.UpdateObjective(objective);
+            await objectiveService.UpdateObjectiveAsync(objective);
         }
-
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async void DeleteAsync(int id)
         {
-            objectiveService.DeleteObjective(id);
+            await objectiveService.DeleteObjectiveAsync(id);
         }
     }
 }

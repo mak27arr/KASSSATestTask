@@ -4,6 +4,7 @@ using KASSSATestTask.Models.Entities;
 using KASSSATestTask.Models.Interface;
 using KASSSATestTask.Models.Repositories;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace KASSSATestTask.DAL.Repositories
 {
@@ -25,9 +26,9 @@ namespace KASSSATestTask.DAL.Repositories
                 return objectiveRepository;
             }
         }
-        public void Save()
+        public async Task<int> SaveAsync()
         {
-            db.SaveChanges();
+            return await db.SaveChangesAsync();
         }
         public void Dispose()
         {

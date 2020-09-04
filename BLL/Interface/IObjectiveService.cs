@@ -1,15 +1,16 @@
 ﻿using KASSSATestTask.Models.Entities;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace KASSSATestTask.BLL.Interface
 {
     public interface IObjectiveService
     {
-        ObjectiveDTO GetObjective(int? id);
-        IEnumerable<ObjectiveDTO> GetObjectives();
-        void AddObjective(ObjectiveDTO orderDto);
-        void UpdateObjective(ObjectiveDTO orderDto);
-        void DeleteObjective(int? id);
+        Task<ObjectiveDTO> GetObjectiveAsync(int? id);
+        Task<IEnumerable<ObjectiveDTO>> GetObjectivesAsync();
+        Task<bool> AddObjectiveAsync(ObjectiveDTO orderDto);
+        Task<bool> UpdateObjectiveAsync(ObjectiveDTO orderDto);
+        Task<bool> DeleteObjectiveAsync(int? id);
         void Dispose();
     }
 }
