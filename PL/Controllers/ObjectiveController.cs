@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace KASSSATestTask.PL.Controllers
 {
     [Route("api/[controller]")]
+    [Produces("application/json")]
     [ApiController]
     public class ObjectiveController : ControllerBase
     {
