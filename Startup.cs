@@ -9,6 +9,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Converters;
+using System;
+using System.IO;
+using System.Reflection;
 
 namespace KASSSATestTask
 {
@@ -30,6 +33,11 @@ namespace KASSSATestTask
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Objective API", Version = "v1" });
+                // Set the comments path for the Swagger JSON and UI.
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+
             });
 
         }
@@ -53,6 +61,7 @@ namespace KASSSATestTask
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Objective API V1");
+                c.RoutePrefix = string.Empty;
             });
             app.UseEndpoints(endpoints =>
             {
